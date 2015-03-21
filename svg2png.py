@@ -1,24 +1,22 @@
 import sys
 import os
 
-sizes = [64, 96, 128]
+path = os.getcwd()
+#print (path)
 
-def print_usage(program_name):
-    print ("Usage: %s file1.svg ... fileN.svg") % (program_name)
+zoom = 2
+if len(sys.argv) > 1:
+	zoom = sys.argv[1]
 
-if len(sys.argv) < 2:
-    print_usage(sys.argv[0])
-    sys.exit(-1)
+if os.path.exists("png") == False : 
+	os.mkdir("png") 
+	
 
-svg_files = sys.argv[1:]
-for svg_file in svg_files:
-    if svg_file.endswith(".svg") == False:
-        print (svg_file, " is not a svg file, continuing!")
-        continue
-
-    new_filename = svg_file.rstrip(".svg")
-    for size in sizes:
-        os.system("rsvg-convert -w %s -h %s %s -o %s-%sx%s.png" % (size, size, svg_file, new_filename, size, size) )
-
-
-
+for dirpath, dirname, filenames in os.walk(path):
+	for filename in filenames:
+		if os.path.splitext(filename)[1] == '.svg':
+			filepath = os.path.join(dirpath, filename)
+			filesubname = filename.rstrip(".svg")
+			print (filename + " ---> " + filesubname + '.png')
+			#rsvg-convert -z 4 shape213.svg>shape213.png
+			os.system("rsvg-convert -z %s %s>./png/%s.png" % (zoom, filepath, filesubname)) # 4 default zoom size.
